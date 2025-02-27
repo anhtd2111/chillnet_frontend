@@ -32,7 +32,7 @@ export default function Profile() {
         dispatch(getUserPosts(userId));
         dispatch(getUserLikedPosts(userId));
         dispatch(getUserSavedPosts(userId));
-    }, [userId, post.like,post.share, post.post, user.reqUser, post.posts.length])
+    }, [userId, post.like, post.share, post.post, user.reqUser, post.posts.length])
     const [value, setValue] = React.useState('one');
     const navigate = useNavigate();
     const [tabValue, setTabValue] = React.useState("1");
@@ -72,7 +72,7 @@ export default function Profile() {
 
         }
     }
-    const handleFollowUser = () =>{
+    const handleFollowUser = () => {
         dispatch(followUser(userId));
     }
     return (
@@ -87,10 +87,9 @@ export default function Profile() {
                                 className="cursor-pointer text-gray-700 hover:text-black transition duration-300"
                                 sx={{ fontSize: "24px" }}
                             />
-                            <h1 className='text-xl font-bold flex-1 text-center'>{user.user?.username}</h1>
-                            {user.user?.verified && (
-                                        <img className="ml-1 w-[21px] h-[21px]" src={verifiedIcon} alt="Verified" />
-                                    )}
+                            <h1 className='text-xl font-bold flex-1 text-center'>
+                                {user.user?.username}
+                            </h1>
                         </div>
                     </section>
                 </div>
@@ -117,7 +116,9 @@ export default function Profile() {
                                     line-clamp-1 hover:line-clamp-none">
                                         {user.user?.username}
                                     </h1>
-                                    
+                                    {user.user?.verified && (
+                                        <img className="ml-1 w-[21px] h-[21px]" src={verifiedIcon} alt="Verified" />
+                                    )}
                                 </div>
                                 <p className="text-gray-500 max-w-[120px] text-[16px] line-clamp-1 hover:line-clamp-none cursor-pointer transition-all">
                                     {user.user?.fullName}
@@ -134,11 +135,11 @@ export default function Profile() {
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-xl">{user.user?.followers?.length}</h3>
-                                    <p onClick={()=>navigate(`/follow/${user.user?.id}`)} className="cursor-pointer hover:underline text-gray-500 text-sm">Followers</p>
+                                    <p onClick={() => navigate(`/follow/${user.user?.id}`)} className="cursor-pointer hover:underline text-gray-500 text-sm">Followers</p>
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-xl">{user.user?.followings?.length}</h3>
-                                    <p onClick={()=>navigate(`/follow/${user.user?.id}`)} className="cursor-pointer hover:underline text-gray-500 text-sm">Following</p>
+                                    <p onClick={() => navigate(`/follow/${user.user?.id}`)} className="cursor-pointer hover:underline text-gray-500 text-sm">Following</p>
                                 </div>
                             </div>
 
@@ -165,21 +166,21 @@ export default function Profile() {
                             {/* Nút hành động */}
                             <div className="flex space-x-4 flex-wrap py-3">
                                 {!user.user?.reqUser ? (
-                                    <Button 
+                                    <Button
                                         onClick={handleFollowUser}
-                                    sx={{
-                                        flex: "1 1 auto",
-                                        borderRadius: "20px",
-                                        paddingY: "8px",
-                                        paddingX: "30px",
-                                        backgroundImage: "linear-gradient(to right, blue, purple)",
-                                        color: "#ffffff",
-                                        textTransform: "none",
-                                        fontSize: "15px",
-                                        fontWeight: "bold",
-                                        opacity: 0.7,
-                                        "&:hover": { opacity: 1 },
-                                    }}>
+                                        sx={{
+                                            flex: "1 1 auto",
+                                            borderRadius: "20px",
+                                            paddingY: "8px",
+                                            paddingX: "30px",
+                                            backgroundImage: "linear-gradient(to right, blue, purple)",
+                                            color: "#ffffff",
+                                            textTransform: "none",
+                                            fontSize: "15px",
+                                            fontWeight: "bold",
+                                            opacity: 0.7,
+                                            "&:hover": { opacity: 1 },
+                                        }}>
                                         {user.user?.followed ? "Unfollow" : "Follow"}
                                     </Button>
                                 ) : (
