@@ -88,6 +88,9 @@ export default function Profile() {
                                 sx={{ fontSize: "24px" }}
                             />
                             <h1 className='text-xl font-bold flex-1 text-center'>{user.user?.username}</h1>
+                            {user.user?.verified && (
+                                        <img className="ml-1 w-[21px] h-[21px]" src={verifiedIcon} alt="Verified" />
+                                    )}
                         </div>
                     </section>
                 </div>
@@ -114,9 +117,7 @@ export default function Profile() {
                                     line-clamp-1 hover:line-clamp-none">
                                         {user.user?.username}
                                     </h1>
-                                    {false && (
-                                        <img className="ml-1 w-[21px] h-[21px]" src={verifiedIcon} alt="Verified" />
-                                    )}
+                                    
                                 </div>
                                 <p className="text-gray-500 max-w-[120px] text-[16px] line-clamp-1 hover:line-clamp-none cursor-pointer transition-all">
                                     {user.user?.fullName}
