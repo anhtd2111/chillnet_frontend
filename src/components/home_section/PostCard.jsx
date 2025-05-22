@@ -23,6 +23,8 @@ import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import video from "../../assets/video.mp4"
+import ListLike from './ListLikeModal';
+import ListLikeModal from './ListLikeModal';
 
 const PostCard = ({ item }) => {
     const { user } = useSelector(store => store);
@@ -51,6 +53,10 @@ const PostCard = ({ item }) => {
     const handleCloseCommentModal = () => setOpenCommentModal(false);
     const [openImagePreview, setOpenImagePreview] = React.useState(false);
     const [previewImage, setPreviewImage] = React.useState('');
+
+    const [openListLike, setOpenListLike] = React.useState(false);
+    const handleOpenListLike = () => setOpenListLike(true);
+    const handleCloseListLike = () => setOpenListLike(false);
 
     const handleImagePreview = (imageUrl) => {
         setPreviewImage(imageUrl);
@@ -134,6 +140,7 @@ const PostCard = ({ item }) => {
                                         }}
                                     >
                                         <MenuItem onClick={() => navigate(`/post/${item?.id}`)}>Go to post</MenuItem>
+                                        {item?.user?.id == user.reqUser.id && <MenuItem onClick={handleOpenListLike}>List Likes</MenuItem>}
                                         {item?.user?.id == user.reqUser.id && <MenuItem onClick={() => handleDeletePost(item?.id)}>Delete</MenuItem>}
                                         <MenuItem onClick={handleClose}>Cancel</MenuItem>
                                     </Menu>
@@ -278,6 +285,7 @@ const PostCard = ({ item }) => {
             </section>
             <section>
                 <CommentModal item={item} handleClose={handleCloseCommentModal} open={openCommentModal} />
+                <ListLikeModal item={item} handleClose={handleCloseListLike} open={openListLike}/>
             </section>
         </div>
     )

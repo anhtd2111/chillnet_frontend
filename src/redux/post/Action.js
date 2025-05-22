@@ -131,6 +131,18 @@ export const likePost = (postId) => async (dispatch, getState) => {
     }
 }
 
+
+export const getListLikes = (postId) => async (dispatch) => {
+    dispatch({ type: actionType.GET_LIST_LIKES_REQUEST })
+    try {
+        const { data } = await api.get(`/api/like/post/${postId}`);
+        dispatch({ type: actionType.GET_LIST_LIKES_SUCCESS, payload: data })
+    } catch (error) {
+        dispatch({ type: actionType.GET_LIST_LIKES_FAILURE, payload: error })
+        toast.error(error?.response?.data);
+    }
+}
+
 export const savePost = (postId) => async (dispatch) => {
     dispatch({ type: actionType.SAVE_POST_REQUEST })
     try {

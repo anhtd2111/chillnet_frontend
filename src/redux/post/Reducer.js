@@ -12,7 +12,8 @@ const initialState = {
     followingPosts: [],
     trendingPosts: [],
     like: null,
-    share: null
+    share: null,
+    likes: [],
 }
 
 export const postReducer = (state = initialState, action) => {
@@ -31,6 +32,7 @@ export const postReducer = (state = initialState, action) => {
         case actionType.COMMENT_POST_REQUEST:
         case actionType.GET_FOLLOWING_USER_POSTS_REQUEST:
         case actionType.GET_TRENDING_POSTS_REQUEST:
+        case actionType.GET_LIST_LIKES_REQUEST:
             return { ...state, loading: true, error: null }
         //Failure
         case actionType.CREATE_POST_FAILURE:
@@ -46,6 +48,7 @@ export const postReducer = (state = initialState, action) => {
         case actionType.COMMENT_POST_FAILURE:
         case actionType.GET_FOLLOWING_USER_POSTS_FAILURE:
         case actionType.GET_TRENDING_POSTS_FAILURE:
+        case actionType.GET_LIST_LIKES_FAILURE:
             return { ...state, loading: false, error: action.payload };
         //Success
         case actionType.CREATE_POST_SUCCESS:
@@ -75,6 +78,8 @@ export const postReducer = (state = initialState, action) => {
         case actionType.FIND_POST_BY_ID_SUCCESS:
         case actionType.COMMENT_POST_SUCCESS:
             return { ...state, loading: false, error: null, post: action.payload }
+        case actionType.GET_LIST_LIKES_SUCCESS:
+            return { ...state, loading: false, error: null, likes: action.payload }
         case LOGOUT:
             return initialState;
         default:
