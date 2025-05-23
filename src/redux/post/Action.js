@@ -24,9 +24,18 @@ export const createPost = (postData) => async (dispatch, getState) => {
             });
         }
     } catch (error) {
-        dispatch({ type: actionType.CREATE_POST_FAILURE, payload: error })
-        toast.error(error?.response?.data);
+    dispatch({ type: actionType.CREATE_POST_FAILURE, payload: error });
+
+    // Nếu response.data là object (validation errors)
+    if (error?.response?.data && typeof error.response.data === 'object') {
+        // Lấy các message lỗi rồi join thành 1 chuỗi
+        const messages = Object.values(error.response.data).join('\n');
+        toast.error(messages);
+    } else {
+        toast.error(error?.response?.data || "Lỗi không xác định");
     }
+}
+
 }
 
 export const deletePost = (postId) => async (dispatch) => {

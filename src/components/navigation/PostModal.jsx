@@ -19,7 +19,7 @@ import AddBoxIcon from '@mui/icons-material/AddBox';
 import { useDispatch, useSelector } from 'react-redux';
 import { createPost } from '../../redux/post/Action';
 import { uploadToCloudinary } from '../../utils/UploadToCloudinary';
-
+import { toast } from 'react-toastify';
 const style = {
     position: 'absolute',
     top: '50%',
@@ -49,6 +49,16 @@ export default function PostModal({ handleClose, open }) {
     const [openEmojiPicker, setOpenEmojiPicker] = React.useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const inputRef = React.useRef(null);
+    React.useEffect(() => {
+        if (open) {
+            setTimeout(() => {
+                inputRef.current?.focus();
+            }, 100); // Delay nhẹ để đợi Modal render
+        }
+    }, [open]);
+
+
     const handleSubmit = (values, actions) => {
         console.log("values: ", values);
         dispatch(createPost(values));
@@ -68,29 +78,33 @@ export default function PostModal({ handleClose, open }) {
         formik.setFieldValue("content", formik.values.content + emojiObject.emoji);
     }
     const handleSelectFile = async (event) => {
-        const files = Array.from(event.target.files); // Lấy danh sách file
+    const files = Array.from(event.target.files);
 
-        if (files.length === 0) return;
+    if (files.length === 0) return;
 
-        try {
-            // Upload từng file lên Cloudinary
-            const uploadedFiles = await Promise.all(
-                files.map(async (file) => {
-                    return await uploadToCloudinary(file); // Trả về URL trực tiếp
-                })
-            );
+    // Danh sách định dạng ảnh/video cho phép
+    const allowedTypes = ["image/jpeg", "image/png", "image/jpg", "image/gif", "video/mp4", "video/quicktime", "video/x-msvideo"];
 
-            // Cập nhật vào formik (giữ lại các file cũ + file mới)
-            formik.setFieldValue("media", [...(formik.values.media || []), ...uploadedFiles]);
+    // Kiểm tra file không hợp lệ
+    const invalidFiles = files.filter(file => !allowedTypes.includes(file.type));
 
-            // Cập nhật state để hiển thị ảnh/video đã upload
-            setSelectedFiles(prev => [...prev, ...uploadedFiles]);
+    if (invalidFiles.length > 0) {
+        toast.error("Only images (jpg, png, gif) and videos (mp4, mov, avi) are allowed!");
+        return;
+    }
 
+    try {
+        const uploadedFiles = await Promise.all(
+            files.map(async (file) => await uploadToCloudinary(file))
+        );
 
-        } catch (error) {
-            console.error("Lỗi upload file:", error);
-        }
-    };
+        formik.setFieldValue("media", [...(formik.values.media || []), ...uploadedFiles]);
+        setSelectedFiles(prev => [...prev, ...uploadedFiles]);
+    } catch (error) {
+        console.error("File upload error:", error);
+        toast.error("Failed to upload files. Please try again.");
+    }
+};
     return (
         <div>
             <Modal
@@ -129,6 +143,7 @@ export default function PostModal({ handleClose, open }) {
                                 <form onSubmit={formik.handleSubmit}>
                                     <div>
                                         <input
+                                            ref={inputRef}
                                             type="text"
                                             name='content'
                                             placeholder='What are you thinking?'
@@ -164,7 +179,7 @@ export default function PostModal({ handleClose, open }) {
                                             <label className='flex items-center space-x-2 rounded-full hover:bg-[#1d9bf0]/10 p-2 cursor-pointer transition-all'>
                                                 <ImageIcon className='text-[#536471]' />
                                                 <input type="file" name="imageFile" className='hidden' multiple
-                                                    onChange={handleSelectFile}/>
+                                                    onChange={handleSelectFile} />
                                             </label>
                                             <div
                                                 className='rounded-full hover:bg-[#1d9bf0]/10 p-2 cursor-pointer transition-all'
